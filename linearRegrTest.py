@@ -87,6 +87,7 @@ def main():
     xTest, yTest = argv[3], argv[4]
     
     import matplotlib.pyplot as plt
+    from sklearn.metrics import mean_squared_error, r2_score
     
     #initiate test data variables
     slope, yInt, r2 = linearFit(xTest, yTest)
@@ -101,7 +102,21 @@ def main():
     print("\tSlope:", regr.coef_[0])
     print("\tY-intercept:", regr.intercept_)
     
+    #gather regression based precition
+    yPred = regrYPredict(regr, xTest)
+    print("\nEvaluation of model:")
+    print("\tMean squared error:", mean_squared_error(yTest, yPred))
+    print("\tVariance:", r_2(yTest, yPred))
     
+    
+    #plotting the regressin prediction
+    plt.scatter(xTest, yTest, color='black')
+    plt.plot(xTest, yPred, color='blue')
+    
+    plt.xticks(())
+    plt.yticks(())
+    plt.show()
+
 
 if __name__ == '__main__':
     main()
