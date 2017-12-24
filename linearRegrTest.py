@@ -4,6 +4,7 @@ Created on Sat Dec 23 17:05:06 2017
 
 @author: arden
 """
+from sklearn import linear_model
 
 def linearFit(xData, yData):
     """A linear fitting method for a given data set.
@@ -20,7 +21,18 @@ def linearFit(xData, yData):
         yInt - The y-intercept of the ideal linear fit.
         r2 - The R-squared value between the data and fitted linear model.
     """
-    pass
+    #finding a linear fit for the given model
+    regr = linear_model.LinearRegression()
+    regr.fit(xData, yData)
+    
+    slope = regr.coef_[0]
+    yInt = regr.intercept_
+    
+    #solving r2
+    from sklearn.metrics import r2_score
+    r2 = r2_score(yData, regr.predict(xData))
+    
+    return slope, yInt, r2
 
 def fittedLinearRegr(xTrain, yTrain):
     """A method to create an skl LinearRegression object from training data.
@@ -37,7 +49,10 @@ def fittedLinearRegr(xTrain, yTrain):
         
         NOTE - This object is of type sklearn.linear_model.LinearRegression()
     """
-    pass
+    regr = linear_model.LinearRegression()
+    regr.fit(xTrain, yTrain)
+    
+    return regr
 
 def regrYPredict(regr, xData):
     """A method to predict yData using a linear regression model, given xData.
@@ -49,7 +64,8 @@ def regrYPredict(regr, xData):
     Returns:
         yData - The predicted y argument data based off the passed xData.
     """
-    pass
+    yData = regr.predict(xData)
+    return yData
  
 
 def main():
@@ -63,15 +79,29 @@ def main():
     regression model.
     
     """
-    
     #store input variables, error if incorrect number of arguments
     from sys import argv
     if (len(argv) != 5):
         raise ValueError("4 Input datasets expected.")
     xTrain, yTrain = argv[1], argv[2]
     xTest, yTest = argv[3], argv[4]
-
-    pass
+    
+    import matplotlib.pyplot as plt
+    
+    #initiate test data variables
+    slope, yInt, r2 = linearFit(xTest, yTest)
+    print("Test data initial statistics:")
+    print("\tSlope:", slope)
+    print("\tY-intercept:", yInt)
+    print("\tR-squared:", r2)
+    
+    #get training based regression object
+    regr = fittedLinearRegr(xTrain, yTrain)
+    print("\nTraining based model statistics:")
+    print("\tSlope:", regr.coef_[0])
+    print("\tY-intercept:", regr.intercept_)
+    
+    
 
 if __name__ == '__main__':
     main()
